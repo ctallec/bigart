@@ -41,7 +41,6 @@ local nb_sequences = math.floor(train_size / opt.truncation)
 
 local rnnBuilder = RnnCore{vocabSize=vocab_size, hiddenSize=hiddenSize}
 local rnn = rnnBuilder:buildCore()
-local params, gradParams = rnn:getParameters()
 
 local stack = Stack{memoryAllocation=opt.memoryAllocation, 
     cellSize=torch.Tensor{batchSize, hiddenSize}}
@@ -71,6 +70,8 @@ if opt.cuda then
     rnn = rnn:cuda()
     criterion = criterion:cuda()
 end
+
+local params, gradParams = rnn:getParameters()
 
 function exec:getInput(t)
     return train_data[(t-1)%train_size + 1]
