@@ -15,6 +15,14 @@ local opt = cmd:parse(arg)
 
 torch.manualSeed(1)
 
+local logdir = 'logs'
+local modeldir = 'save'
+local logfile = cmd:string(paths.concat(logdir, 'log'), opt, {cuda=true, epochs=true,
+    memoryAllocation=true})
+local modelfile = cmd:string(paths.concat(modeldir, 'model'), opt, {cuda=true, 
+    epochs=true, memoryAllocation=true}) .. '.t7'
+local logstream = io.open(logfile, 'w')
+
 local dataset_directory = 'dataset'
 local train_file = paths.concat(dataset_directory, 'train.t7')
 local valid_file = paths.concat(dataset_directory, 'valid.t7')
@@ -30,20 +38,23 @@ for k,v in pairs(vocab) do
     vocab_size = vocab_size + 1
 end
 
-local train_size = 10000 -- train_data:size(1)
-local valid_size = 10000 -- valid_data:size(1)
+local train_size = train_data:size(1)
+local valid_size = valid_data:size(1)
 
-local hiddenSize = 32
+local hiddenSize = 512
 local batchSize = train_data:size(2)
-local initState = torch.Tensor(batchSize, hiddenSize):zero()
-local hiddenGradient = torch.Tensor(batchSize, hiddenSize):zero()
-local nb_sequences = math.floor(train_size / opt.truncation)
 
-local rnnBuilder = RnnCore{vocabSize=vocab_size, hiddenSize=hiddenSize}
+local rnnBuilder = RnnCore{vocabSize=vocab_size, hiddenSize=hiddenSize, rnnType='lstm'}
 local rnn = rnnBuilder:buildCore()
 
+local stateSize = rnnBuilder:getStateSize()
+
+local initState = torch.Tensor(batchSize, stateSize):zero()
+local hiddenGradient = torch.Tensor(batchSize, stateSize):zero()
+local nb_sequences = math.floor(train_size / opt.truncation)
+
 local stack = Stack{memoryAllocation=opt.memoryAllocation, 
-    cellSize=torch.Tensor{batchSize, hiddenSize}}
+    cellSize=torch.Tensor{batchSize, stateSize}}
 stack:push(initState)
 
 local policy = StoragePolicy{memoryAllocation=opt.memoryAllocation}
@@ -111,7 +122,7 @@ end
 local function evaluate()
     local t=1
     local cumLoss = 0
-    local state = torch.Tensor(batchSize, hiddenSize):zero()
+    local state = torch.Tensor(batchSize, stateSize):zero()
 
     if opt.cuda then
         state = state:cuda()
@@ -128,9 +139,13 @@ local function evaluate()
 end
 
 for e=1, opt.epochs do
+    torch.save(modelfile, rnn)
     print("On epoch " .. e .. ":")
     print("Train:")
-    print(train())
+    local train_loss = train()
+    print(train_loss)
     print("Validation:")
-    print(evaluate())
+    local validation_loss = evaluate()
+    print(validation_loss)
+    logstream:write(e .. ' ' .. train_loss .. ' ' .. validation_loss .. '\n')
 end
