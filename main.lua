@@ -7,7 +7,7 @@ local Stack = require 'utils.stack'
 local StoragePolicy = require 'utils.storagePolicy'
 
 local cmd = torch.CmdLine()
-cmd:option('-memoryAllocation', 10, 'memory allocation')
+cmd:option('-memoryAllocation', 100, 'memory allocation')
 cmd:option('-truncation', 50, 'truncation')
 cmd:option('-epochs', 20, 'number of epochs')
 cmd:option('-cuda', false, 'gpu')
@@ -99,6 +99,7 @@ local function train()
     end
 
     for i=1, nb_sequences do
+        xlua.progress(i, nb_sequences)
         local _, batch_loss = optim.rmsprop(feval, params, optimState)
         cumLoss = cumLoss + batch_loss[1]
         t = t + opt.truncation
@@ -121,5 +122,6 @@ local function evaluate()
 end
 
 for e=1, opt.epochs do
+    print("On epoch " .. e .. ":")
     print(e .. ' ' .. train() .. ' ' .. evaluate())
 end
