@@ -63,6 +63,8 @@ if opt.cuda then
     require 'cunn'
     require 'cudnn'
 
+    initState = initSate:cuda()
+    hiddenGradient = hiddenGradient:cuda()
     train_data = train_data:cuda()
     valid_data = valid_data:cuda()
     stack = stack:cuda()
