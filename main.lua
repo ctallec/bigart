@@ -30,8 +30,8 @@ for k,v in pairs(vocab) do
     vocab_size = vocab_size + 1
 end
 
-local train_size = train_data:size(1)
-local valid_size = valid_data:size(1)
+local train_size = 10000 -- train_data:size(1)
+local valid_size = 10000 -- valid_data:size(1)
 
 local hiddenSize = 32
 local batchSize = train_data:size(2)
@@ -111,6 +111,10 @@ local function evaluate()
     local t=1
     local cumLoss = 0
     local state = torch.Tensor(batchSize, hiddenSize):zero()
+
+    if opt.cuda then
+        state = state:cuda()
+    end
 
     for t=1, valid_size do
         xlua.progress(t, valid_size)
