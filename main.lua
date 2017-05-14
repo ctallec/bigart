@@ -113,6 +113,7 @@ local function evaluate()
     local state = torch.Tensor(batchSize, hiddenSize):zero()
 
     for t=1, valid_size do
+        xlua.progress(t, valid_size)
         local output, next_state = unpack(rnn:forward{valid_data[t], state})
         state:copy(next_state)
         cumLoss = cumLoss + criterion:forward(output, valid_data[t%valid_size+1])
@@ -123,5 +124,8 @@ end
 
 for e=1, opt.epochs do
     print("On epoch " .. e .. ":")
-    print(e .. ' ' .. train() .. ' ' .. evaluate())
+    print("Train:")
+    print(train())
+    print("Validation:")
+    print(evaluate())
 end
