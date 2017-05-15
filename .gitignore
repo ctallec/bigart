@@ -4,3 +4,4 @@ dataset/*.t7
 logs/*
 save/*
 !save/.gitkeep
+!logs/.gitkeep

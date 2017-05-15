@@ -39,8 +39,8 @@ for k,v in pairs(vocab) do
     vocab_size = vocab_size + 1
 end
 
-local train_size = 50 -- train_data:size(1)
-local valid_size = 10 -- valid_data:size(1)
+local train_size = train_data:size(1)
+local valid_size = valid_data:size(1)
 
 local hiddenSize = 512
 local batchSize = train_data:size(2)
