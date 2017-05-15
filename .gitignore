@@ -1,5 +1,7 @@
 dataset/text8/*
+!dataset/text8/.gitkeep
 dataset/ptb/*
+!dataset/ptb/.gitkeep
 dataset/*.t7
 logs/*
 save/*
