@@ -10,7 +10,7 @@ function TruncationHandler:drawTruncation()
 end
 
 function TruncationHandler:getReweighting(s)
-    return 1
+    return 0
 end
 
 function TruncationHandler:reset()
