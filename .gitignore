@@ -7,3 +7,5 @@ logs/*
 save/*
 !save/.gitkeep
 !logs/.gitkeep
+*.swp
+*.swo

@@ -17,6 +17,7 @@ function Executer:executeStrategy(gradHidden, m, t, s)
         local output, _ = unpack(self.rnnCore:forward({self:getInput(s), hiddenState}))
 --d        self.count = self.count + 1
         local gradOutput = self:setOutputAndGetGradOutput(s+t-1, output)
+        gradHidden:mul(1/(1-self:getReweighting(s)))
         local gradInput, gradHiddenPrevious = unpack(self.rnnCore:backward(
             {self:getInput(s), hiddenState},
             {gradOutput, gradHidden}))
@@ -34,6 +35,10 @@ function Executer:executeStrategy(gradHidden, m, t, s)
         local gradHiddenL = self:executeStrategy(gradHiddenR, m, y, s)
         return gradHiddenL
     end
+end
+
+function Executer:getReweighting(s)
+    return 1
 end
 
 return Executer

@@ -8,12 +8,16 @@ local Stack = require 'utils.stack'
 local StoragePolicy = require 'utils.storagePolicy'
 
 local cmd = torch.CmdLine()
-cmd:option('-memoryAllocation', 100, 'memory allocation')
+cmd:option('-memoryAllocation', 200, 'memory allocation')
 cmd:option('-truncation', 50, 'truncation')
 cmd:option('-epochs', 20, 'number of epochs')
 cmd:option('-cuda', false, 'gpu')
+cmd:option('-art', true, 'using art or truncated bptt')
 local opt = cmd:parse(arg)
 
+local TruncationHandlerFile = opt.art and 'utils.artTruncationHandler' or 'utils.truncationHander'
+local TruncationHandler = require(TruncationHandlerFile)
+local trunc = TruncationHandler({t0=opt.truncation, alpha=3})
 torch.manualSeed(1)
 
 local logdir = 'logs'
@@ -62,6 +66,9 @@ local policy = StoragePolicy{memoryAllocation=opt.memoryAllocation}
 policy:addTimesteps(opt.truncation)
 
 local exec = Executer{D=policy.D,stack=stack,rnnCore=rnn}
+function exec:getReweighting(s)
+    return trunc:getReweighting(s)
+end
 
 local criterion = nn.ClassNLLCriterion()
 local loss = 0
@@ -97,6 +104,7 @@ end
 local function train()
     local t=1
     local cumLoss = 0
+    local T=0
 
     local function feval(params_)
         if params_ ~= params then
@@ -105,20 +113,22 @@ local function train()
 
         loss = 0
         gradParams:zero()
+        T = trunc:drawTruncation()
+        policy:setTimestep(T)
         exec:executeStrategy(hiddenGradient, opt.memoryAllocation-1,
-            opt.truncation, t)
+            T, t)
 
         return loss, gradParams
     end
 
-    for i=1, nb_sequences do
-        io.write('\rBatch: ' .. i .. '/' .. nb_sequences .. ' -- Current loss: ' .. cumLoss / i / opt.truncation / math.log(2))
+    repeat
+        io.write('\rBatch: ' .. t .. '/' .. train_size .. ' -- Current loss: ' .. cumLoss / t / math.log(2))
         io.flush()
         local _, batch_loss = optim.rmsprop(feval, params, optimState)
         cumLoss = cumLoss + batch_loss[1]
-        t = t + opt.truncation
-    end
-    return cumLoss / nb_sequences / opt.truncation / math.log(2)
+        t = t + T
+    until(t>=train_size)
+    return cumLoss / t / math.log(2)
 end
 
 local function evaluate()

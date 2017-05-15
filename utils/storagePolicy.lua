@@ -43,6 +43,13 @@ function StoragePolicy:getCurrent()
     return #self.C
 end
 
+function StoragePolicy:setTimestep(T)
+    local t = self:getCurrent()
+    if T-t > 0 then
+        self:addTimesteps(T-t)
+    end
+end
+
 function StoragePolicy:tostring()
     local result = ""
     result = result .. "C:\n{"
@@ -67,9 +74,8 @@ function StoragePolicy:tostring()
 end
 
 -- local store = StoragePolicy{memoryAllocation=4}
--- for t=1, 10 do
---     store:addTimestep()
--- end
+-- store:setTimestep(10)
+-- print(store:getCurrent())
 -- print(store:tostring())
 
 return StoragePolicy
