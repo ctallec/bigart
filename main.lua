@@ -1,6 +1,7 @@
 local paths = require 'paths'
 local optim = require 'optim'
 
+
 local Executer = require 'utils.executer'
 local RnnCore = require 'models.rnnCore'
 local Stack = require 'utils.stack'
