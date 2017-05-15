@@ -117,7 +117,7 @@ local function train()
         cumLoss = cumLoss + batch_loss[1]
         t = t + opt.truncation
     end
-    return cumLoss / nb_sequences / opt.truncation
+    return cumLoss / nb_sequences / opt.truncation / math.log(2)
 end
 
 local function evaluate()
@@ -136,7 +136,7 @@ local function evaluate()
         cumLoss = cumLoss + criterion:forward(output, valid_data[t%valid_size+1])
     end
 
-    return cumLoss / valid_size
+    return cumLoss / valid_size / math.log(2)
 end
 
 for e=1, opt.epochs do

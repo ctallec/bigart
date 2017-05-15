@@ -3,3 +3,4 @@ dataset/ptb/*
 dataset/*.t7
 logs/*
 save/*
+!save/.gitkeep
