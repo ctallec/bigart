@@ -12,10 +12,11 @@ cmd:option('-memoryAllocation', 200, 'memory allocation')
 cmd:option('-truncation', 50, 'truncation')
 cmd:option('-epochs', 20, 'number of epochs')
 cmd:option('-cuda', false, 'gpu')
-cmd:option('-art', true, 'using art or truncated bptt')
+cmd:option('-tbptt', false, 'using art or truncated bptt')
+cmd:option('-learningRate', 3e-4, 'learning rate')
 local opt = cmd:parse(arg)
 
-local TruncationHandlerFile = opt.art and 'utils.artTruncationHandler' or 'utils.truncationHandler'
+local TruncationHandlerFile = opt.tbptt and 'utils.truncationHandler' or 'utils.artTruncationHandler'
 local TruncationHandler = require(TruncationHandlerFile)
 local trunc = TruncationHandler({t0=opt.truncation, alpha=3})
 torch.manualSeed(1)
@@ -161,4 +162,5 @@ for e=1, opt.epochs do
     local validation_loss = evaluate()
     print(validation_loss)
     logstream:write(e .. ' ' .. train_loss .. ' ' .. validation_loss .. '\n')
+    logstream:flush()
 end
