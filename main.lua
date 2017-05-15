@@ -42,7 +42,7 @@ end
 local train_size = train_data:size(1)
 local valid_size = valid_data:size(1)
 
-local hiddenSize = 700
+local hiddenSize = 512
 local batchSize = train_data:size(2)
 
 local rnnBuilder = RnnCore{vocabSize=vocab_size, hiddenSize=hiddenSize, rnnType='lstm'}
@@ -67,7 +67,7 @@ local criterion = nn.ClassNLLCriterion()
 local loss = 0
 
 local optimState = {
-    learningRate=1e-2
+    learningRate=3e-4
 }
 
 if opt.cuda then
@@ -112,7 +112,8 @@ local function train()
     end
 
     for i=1, nb_sequences do
-        xlua.progress(i, nb_sequences)
+        io.write('\rBatch: ' .. i .. '/' .. nb_sequences .. ' -- Current loss: ' .. cumLoss / i / opt.truncation / math.log(2))
+        io.flush()
         local _, batch_loss = optim.rmsprop(feval, params, optimState)
         cumLoss = cumLoss + batch_loss[1]
         t = t + opt.truncation
