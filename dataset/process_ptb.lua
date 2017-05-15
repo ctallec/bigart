@@ -12,7 +12,7 @@ local valid_file = directory .. 'valid.txt'
 local tensor_train_file = directory .. 'train.t7'
 local tensor_test_file = directory .. 'test.t7'
 local tensor_valid_file = directory .. 'valid.t7'
-local vocab_file = directory .. 'vocab_ptb.t7'
+local vocab_file = directory .. 'vocab.t7'
 
 local proc = Processer()
 proc:process(valid_file, tensor_valid_file, vocab_file)

@@ -24,11 +24,11 @@ local modelfile = cmd:string(paths.concat(modeldir, 'model'), opt, {cuda=true,
     epochs=true, memoryAllocation=true}) .. '.t7'
 local logstream = io.open(logfile, 'w')
 
-local dataset_directory = 'dataset'
+local dataset_directory = 'dataset/ptb'
 local train_file = paths.concat(dataset_directory, 'train.t7')
 local valid_file = paths.concat(dataset_directory, 'valid.t7')
 local test_file = paths.concat(dataset_directory, 'test.t7')
-local vocab_file = paths.concat(dataset_directory, 'vocab_text8.t7')
+local vocab_file = paths.concat(dataset_directory, 'vocab.t7')
 
 local train_data = torch.load(train_file)
 local valid_data = torch.load(valid_file)
