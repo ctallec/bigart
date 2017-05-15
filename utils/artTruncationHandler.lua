@@ -31,6 +31,10 @@ function ArtTruncationHandler:getReweighting(s)
     return self.alpha / ((self.alpha-1)*self.t0 + (s-T)) 
 end
 
+function ArtTruncationHandler:reset()
+    self.truncationTable = {1}
+end
+
 -- local trunc = ArtTruncationHandler({t0=50, alpha=3})
 -- for i=1, 10 do
 --     print(trunc:drawTruncation())

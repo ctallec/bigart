@@ -13,6 +13,8 @@ function TruncationHandler:getReweighting(s)
     return 1
 end
 
+function TruncationHandler:reset()
+end
 -- local trunc = TruncationHandler({t0=50, alpha=3})
 -- for i=1, 10 do
 --     print(trunc:drawTruncation())

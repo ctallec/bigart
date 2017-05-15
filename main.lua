@@ -155,6 +155,7 @@ for e=1, opt.epochs do
     print("On epoch " .. e .. ":")
     print("Train:")
     local train_loss = train()
+    trunc:reset()
     print(train_loss)
     print("Validation:")
     local validation_loss = evaluate()
