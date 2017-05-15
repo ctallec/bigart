@@ -1,3 +1,3 @@
 #!/bin/bash
-rm dataset/text8*
-rm dataset/*.t7
+rm -f dataset/text8/*
+rm -f dataset/ptb/*

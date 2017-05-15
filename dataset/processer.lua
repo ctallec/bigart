@@ -45,6 +45,16 @@ function Processer:process(textfile, out_tensorfile, out_vocabfile)
     print('Done in time (seconds): ', timer:time().real)
 end
 
+function Processer:processAndBatch(in_tensorfile, out_tensorfile, batch_size)
+    local data = torch.load(in_tensorfile)
+    local size = data:size(1)
+
+    size = math.floor(size / batch_size) * batch_size
+    data = data[{{1, size}}]:view(batch_size, size / batch_size):t()
+
+    torch.save(out_tensorfile, data)
+end
+
 function Processer:split(tensorfile, test_nb_characters, batch_size, 
     train_tensorfile, valid_tensorfile, test_tensorfile)
     local data = torch.load(tensorfile)

@@ -1,4 +1,5 @@
-dataset/text8*
+dataset/text8/*
+dataset/ptb/*
 dataset/*.t7
 logs/*
 save/*

@@ -5,7 +5,7 @@ cmd:option('-batch_size', 128, 'batch size')
 
 local opt = cmd:parse(arg)
 
-local directory = 'dataset/'
+local directory = 'dataset/text8/'
 local text_file = directory .. 'text8'
 local tensor_text_file = directory .. 'text8.t7'
 local vocab_file = directory .. 'vocab_text8.t7'
