@@ -78,7 +78,7 @@ local criterion = nn.ClassNLLCriterion()
 local loss = 0
 
 local optimState = {
-    learningRate=3e-4
+    learningRate=opt.learningRate
 }
 
 if opt.cuda then
