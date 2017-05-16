@@ -12,6 +12,7 @@ cmd:option('-memoryAllocation', 200, 'memory allocation')
 cmd:option('-truncation', 50, 'truncation')
 cmd:option('-epochs', 20, 'number of epochs')
 cmd:option('-cuda', false, 'gpu')
+cmd:option('-gpu', 1, 'index of gpu')
 cmd:option('-tbptt', false, 'using art or truncated bptt')
 cmd:option('-learningRate', 3e-4, 'learning rate')
 local opt = cmd:parse(arg)
@@ -19,6 +20,7 @@ local opt = cmd:parse(arg)
 local TruncationHandlerFile = opt.tbptt and 'utils.truncationHandler' or 'utils.artTruncationHandler'
 local TruncationHandler = require(TruncationHandlerFile)
 local trunc = TruncationHandler({t0=opt.truncation, alpha=3})
+
 torch.manualSeed(1)
 
 local logdir = 'logs'
@@ -81,7 +83,9 @@ local optimState = {
 if opt.cuda then
     require 'cunn'
     require 'cudnn'
+    require 'cutorch'
 
+    cutorch.setDevice(opt.gpu)
     initState = initState:cuda()
     hiddenGradient = hiddenGradient:cuda()
     train_data = train_data:cuda()
