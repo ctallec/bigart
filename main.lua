@@ -130,7 +130,7 @@ local function train()
     repeat
         io.write('\rBatch: ' .. t .. '/' .. train_size .. ' -- Current loss: ' .. cumLoss / t / math.log(2))
         io.flush()
-        local _, batch_loss = optim.rmsprop(feval, params, optimState)
+        local _, batch_loss = optim.adam(feval, params, optimState)
         cumLoss = cumLoss + batch_loss[1]
         t = t + T
     until(t>=train_size)

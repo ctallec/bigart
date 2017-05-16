@@ -13,4 +13,4 @@ wget https://raw.githubusercontent.com/yoonkim/lstm-char-cnn/master/data/ptb/val
 cd ../..
 
 th dataset/process_text8.lua -batch_size 128
-th dataset/process_ptb.lua -batch_size 32
+th dataset/process_ptb.lua -batch_size 64
