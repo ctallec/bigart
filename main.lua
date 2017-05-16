@@ -151,15 +151,20 @@ local function evaluate()
     return cumLoss / valid_size / math.log(2)
 end
 
+local min_loss = 10000
+local validation_loss = 1000
 for e=1, opt.epochs do
-    torch.save(modelfile, rnn)
+    if validation_loss < min_loss then
+        torch.save(modelfile, rnn)
+        min_loss = validation_loss
+    end
     print("On epoch " .. e .. ":")
     print("Train:")
     local train_loss = train()
     trunc:reset()
     print(train_loss)
     print("Validation:")
-    local validation_loss = evaluate()
+    validation_loss = evaluate()
     print(validation_loss)
     logstream:write(e .. ' ' .. train_loss .. ' ' .. validation_loss .. '\n')
     logstream:flush()
