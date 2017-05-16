@@ -15,6 +15,7 @@ cmd:option('-cuda', false, 'gpu')
 cmd:option('-gpu', 1, 'index of gpu')
 cmd:option('-tbptt', false, 'using art or truncated bptt')
 cmd:option('-learningRate', 3e-4, 'learning rate')
+cmd:option('-hiddenSize', 512, 'number of hidden units')
 local opt = cmd:parse(arg)
 
 local TruncationHandlerFile = opt.tbptt and 'utils.truncationHandler' or 'utils.artTruncationHandler'
@@ -49,7 +50,7 @@ end
 local train_size = train_data:size(1)
 local valid_size = valid_data:size(1)
 
-local hiddenSize = 512
+local hiddenSize = opt.hiddenSize
 local batchSize = train_data:size(2)
 
 local rnnBuilder = RnnCore{vocabSize=vocab_size, hiddenSize=hiddenSize, rnnType='lstm'}
