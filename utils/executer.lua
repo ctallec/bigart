@@ -14,18 +14,18 @@ function Executer:executeStrategy(gradHidden, m, t, s)
     if t == 0 then
         return gradHidden
     elseif t == 1 then
-        local output, _ = unpack(self.rnnCore:forward({self:getInput(s), hiddenState}))
+        local output, _ = table.unpack(self.rnnCore:forward({self:getInput(s), hiddenState}))
 --d        self.count = self.count + 1
         local gradOutput = self:setOutputAndGetGradOutput(s+t-1, output)
         gradHidden:mul(1/(1-self:getReweighting(s)))
-        local gradInput, gradHiddenPrevious = unpack(self.rnnCore:backward(
+        local gradInput, gradHiddenPrevious = table.unpack(self.rnnCore:backward(
             {self:getInput(s), hiddenState},
             {gradOutput, gradHidden}))
         return gradHiddenPrevious
     else
         local y = self.D[t][m]
         for i=0, y-1 do
-            local output, tempHiddenState = unpack(self.rnnCore:forward({self:getInput(s+i), hiddenState}))
+            local output, tempHiddenState = table.unpack(self.rnnCore:forward({self:getInput(s+i), hiddenState}))
 --d            self.count = self.count + 1
             hiddenState:copy(tempHiddenState)
         end

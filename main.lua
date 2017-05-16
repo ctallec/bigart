@@ -148,7 +148,7 @@ local function evaluate()
 
     for t=1, valid_size do
         xlua.progress(t, valid_size)
-        local output, next_state = unpack(rnn:forward{valid_data[t], state})
+        local output, next_state = table.unpack(rnn:forward{valid_data[t], state})
         state:copy(next_state)
         cumLoss = cumLoss + criterion:forward(output, valid_data[t%valid_size+1])
     end
