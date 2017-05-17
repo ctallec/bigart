@@ -16,7 +16,7 @@ local sizeTable = {
 local statesize = sizeTable['lstm']
 
 local dataset_directory = 'dataset/ptb'
-local test_file = paths.concat(dataset_directory, 'test.t7')
+local test_file = paths.concat(dataset_directory, 'valid.t7')
 
 local test_data = torch.load(test_file)
 local test_size = test_data:size(1)
