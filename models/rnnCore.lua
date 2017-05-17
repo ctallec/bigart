@@ -7,6 +7,7 @@ function RnnCore:_init(opts)
     self.hiddenSize = opts.hiddenSize
     self.vocabSize = opts.vocabSize
     self.rnnType = opts.rnnType or 'rnn'
+    self.forgetBias = opts.forgetBias or 0
 end
 
 function RnnCore:buildCore()
@@ -78,9 +79,12 @@ function RnnCore:buildLSTM()
         nn.Linear(self.hiddenSize, self.hiddenSize)(m)
     })
 
+    local forgetLinear = nn.Linear(self.hiddenSize, self.hiddenSize)(m)
+    forgetLinear.data.module.bias:fill(self.forgetBias)
+
     local f = nn.Sigmoid()(nn.CAddTable(){
         nn.LookupTable(self.vocabSize, self.hiddenSize)(x),
-        nn.Linear(self.hiddenSize, self.hiddenSize)(m)
+        forgetLinear
     })
 
     local next_c = nn.CAddTable(){
