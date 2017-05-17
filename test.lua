@@ -30,6 +30,7 @@ if opt.cuda then
     require 'cutorch'
 
     test_data = test_data:cuda()
+    criterion = criterion:cuda()
 end
 
 local rnn = torch.load(opt.model)
