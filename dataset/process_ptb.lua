@@ -15,9 +15,9 @@ local tensor_valid_file = directory .. 'valid.t7'
 local vocab_file = directory .. 'vocab.t7'
 
 local proc = Processer()
-proc:process(valid_file, tensor_valid_file, vocab_file)
-proc:process(test_file, tensor_test_file, vocab_file)
 proc:process(train_file, tensor_train_file, vocab_file)
+proc:process_with_vocab(valid_file, vocab_file, tensor_valid_file)
+proc:process_with_vocab(test_file, vocab_file, tensor_test_file)
 
 proc:processAndBatch(tensor_valid_file, tensor_valid_file, opt.batch_size)
 proc:processAndBatch(tensor_train_file, tensor_train_file, opt.batch_size)

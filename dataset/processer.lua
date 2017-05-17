@@ -45,6 +45,21 @@ function Processer:process(textfile, out_tensorfile, out_vocabfile)
     print('Done in time (seconds): ', timer:time().real)
 end
 
+function Processer:process_with_vocab(textfile, vocabfile, out_tensorfile)
+    local vocab_mapping = torch.load(vocabfile)
+
+    local f = torch.DiskFile(textfile)
+    local rawdata = f:readString('*a') -- NOTE: this reads the whole file at once
+    f:close()
+
+    local data = torch.ByteTensor(#rawdata) -- store it into 1D first, then rearrange
+    for i=1, #rawdata do
+        data[i] = vocab_mapping[rawdata:sub(i, i)] -- lua has no string indexing using []
+    end
+
+    torch.save(out_tensorfile, data)
+end
+
 function Processer:processAndBatch(in_tensorfile, out_tensorfile, batch_size)
     local data = torch.load(in_tensorfile)
     local size = data:size(1)
