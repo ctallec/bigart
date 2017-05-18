@@ -5,6 +5,7 @@ local cmd = torch.CmdLine()
 cmd:option('-rnnType', 'lstm', 'network type')
 cmd:option('-hiddenSize', 32, 'hidden size')
 cmd:option('-samples', 500, 'number of samples')
+cmd:option('-cuda', false, 'gpu')
 local opt = cmd:parse(arg)
 
 local dataset_directory = 'dataset/ptb'
@@ -28,6 +29,15 @@ local rnn = torch.load('save/model.t7')
 
 local state = torch.Tensor(1, stateSize):zero()
 local input = torch.Tensor{1}
+
+if opt.cuda then
+    require 'cudnn'
+    require 'cunn'
+    require 'cutorch'
+
+    state = state:cuda()
+    input = input:cuda()
+end
 
 for i=1, opt.samples do
     io.write(inv_vocab[input[1]])
