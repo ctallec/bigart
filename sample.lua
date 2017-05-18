@@ -26,8 +26,6 @@ local sizeTable = {
 
 local stateSize = sizeTable[opt.rnnType]
 
-local rnn = torch.load(opt.model)
-
 local state = torch.Tensor(1, stateSize):zero()
 local input = torch.Tensor{1}
 
@@ -39,6 +37,8 @@ if opt.cuda then
     state = state:cuda()
     input = input:cuda()
 end
+
+local rnn = torch.load(opt.model)
 
 for i=1, opt.samples do
     io.write(inv_vocab[input[1]])
