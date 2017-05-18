@@ -1,7 +1,7 @@
 local Processer = require 'dataset.processer'
 
 local cmd = torch.CmdLine()
-cmd:option('-batch_size', 32, 'batch size')
+cmd:option('-batch_size', 64, 'batch size')
 
 local opt = cmd:parse(arg)
 
