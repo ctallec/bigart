@@ -23,8 +23,6 @@ local TruncationHandlerFile = opt.tbptt and 'utils.truncationHandler' or 'utils.
 local TruncationHandler = require(TruncationHandlerFile)
 local trunc = TruncationHandler({t0=opt.truncation, alpha=3})
 
-torch.manualSeed(1)
-
 local logdir = 'logs'
 local modeldir = 'save'
 local logfile = cmd:string(paths.concat(logdir, 'log'), opt, {cuda=true, epochs=true,
