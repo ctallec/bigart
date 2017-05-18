@@ -6,6 +6,7 @@ cmd:option('-rnnType', 'lstm', 'network type')
 cmd:option('-hiddenSize', 32, 'hidden size')
 cmd:option('-samples', 500, 'number of samples')
 cmd:option('-cuda', false, 'gpu')
+cmd:option('-model', 'save/model.t7', 'model file')
 local opt = cmd:parse(arg)
 
 local dataset_directory = 'dataset/ptb'
@@ -25,7 +26,7 @@ local sizeTable = {
 
 local stateSize = sizeTable[opt.rnnType]
 
-local rnn = torch.load('save/model.t7')
+local rnn = torch.load(opt.model)
 
 local state = torch.Tensor(1, stateSize):zero()
 local input = torch.Tensor{1}
