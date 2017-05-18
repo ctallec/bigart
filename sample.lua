@@ -42,7 +42,7 @@ local rnn = torch.load(opt.model)
 
 for i=1, opt.samples do
     io.write(inv_vocab[input[1]])
-    local out, next_state = unpack(rnn:forward{input, state})
+    local out, next_state = table.unpack(rnn:forward{input, state})
     local next_index = torch.multinomial(out:exp():div(out:sum()), 1):squeeze()
     input[1] = next_index
     state:copy(next_state)
