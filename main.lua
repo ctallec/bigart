@@ -28,7 +28,22 @@ torch.manualSeed(1)
 local logdir = 'logs'
 local modeldir = 'save'
 local logfile = cmd:string(paths.concat(logdir, 'log'), opt, {cuda=true, epochs=true,
-    memoryAllocation=true})
+    memoryAllocation=true}) .. ',0'
+
+local function ndec(n)
+    if n==0 then 
+        return 1
+    else
+        return math.floor(math.log(n)/math.log(10)) + 1
+    end
+end
+
+while paths.filep(logfile) do
+    ctr = ctr and ctr + 1 or 1
+    logfile = logfile:sub(1, -1 - ndec(ctr-1))
+    logfile = logfile .. ctr
+end
+
 local modelfile = cmd:string(paths.concat(modeldir, 'model'), opt, {cuda=true, 
     epochs=true, memoryAllocation=true}) .. '.t7'
 local logstream = io.open(logfile, 'w')
