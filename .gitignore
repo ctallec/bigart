@@ -7,5 +7,7 @@ logs/*
 save/*
 !save/.gitkeep
 !logs/.gitkeep
+!logs/keep
 *.swp
 *.swo
+run_server.sh
